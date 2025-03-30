@@ -7,7 +7,7 @@ import L from "leaflet"
 
 // Fix for broken marker icons
 const markerIcon = new L.Icon({
-  iconUrl: "/marker-icon.png", // Path to marker icon
+  iconUrl: "/marker-icon.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -15,13 +15,25 @@ const markerIcon = new L.Icon({
   shadowSize: [41, 41],
 })
 
+// Define TypeScript interfaces
+interface Earthquake {
+  id: string
+  properties: {
+    mag: number
+    place: string
+  }
+  geometry: {
+    coordinates: [number, number, number] // [longitude, latitude, depth]
+  }
+}
+
 const LeafletMap = () => {
-  const [earthquakes, setEarthquakes] = useState<any[]>([])
+  const [earthquakes, setEarthquakes] = useState<Earthquake[]>([]) // ✅ Typed state
 
   useEffect(() => {
     fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson")
       .then((res) => res.json())
-      .then((data) => setEarthquakes(data.features))
+      .then((data) => setEarthquakes(data.features)) // ✅ Data is properly typed
   }, [])
 
   return (
